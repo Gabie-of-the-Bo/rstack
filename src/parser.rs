@@ -35,7 +35,7 @@ pub fn to_instruction(vector: &Vec<&str>) -> Instruction{
         ["ROTL", a] => Instruction::from((InstId::ROTL, p(a))),
         ["ROTR", a] => Instruction::from((InstId::ROTR, p(a))),
 
-        ["SHOW"] => Instruction::from(InstId::SHOW),
+        ["OUT"] => Instruction::from(InstId::OUT),
 
         _ => Instruction::from(InstId::HALT)
     };

@@ -7,6 +7,8 @@ pub enum InstId{
     IN16,
     IN8,
 
+    OUT,
+
     STORE,
     STOREC,
     STOREAT,
@@ -31,9 +33,7 @@ pub enum InstId{
     ROTL,
     ROTR,
 
-    HALT,
-
-    SHOW
+    HALT
 }
 
 pub struct Instruction{

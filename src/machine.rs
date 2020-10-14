@@ -1,6 +1,7 @@
 use crate::instruction::*;
 
 use crate::input::InputBuffer;
+use crate::output::OutputBuffer;
 
 pub struct Machine{
     stack: [u32; 1000],
@@ -59,7 +60,7 @@ impl Machine{
         return self.memory[address];
     }
 
-    fn execute_instruction<T>(&mut self, program: &Program, input: &mut InputBuffer<T>)
+    fn execute_instruction<T>(&mut self, program: &Program, input: &mut InputBuffer<T>, output: &mut OutputBuffer)
     where std::io::Cursor<T>: std::io::Read{
         let i = self.fetch(&program);
 
@@ -78,6 +79,10 @@ impl Machine{
 
             InstId::IN8 => {
                 self.push(input.read_u8() as u32);
+            },
+
+            InstId::OUT => {
+                output.out(self.pop());
             },
 
             InstId::STORE => {
@@ -186,21 +191,19 @@ impl Machine{
             InstId::HALT => {
                 self.halted = true;
             }
-
-            InstId::SHOW => println!("{}", self.pop()),
         }
     }
 
     #[allow(dead_code)]
-    pub fn run<T>(&mut self, program: &Program, input: &mut InputBuffer<T>)
+    pub fn run<T>(&mut self, program: &Program, input: &mut InputBuffer<T>, output: &mut OutputBuffer)
     where std::io::Cursor<T>: std::io::Read{
         while !self.halted && self.ip[self.cip] < program.len(){
-            self.execute_instruction(&program, input);
+            self.execute_instruction(&program, input, output);
         }
     }
 
     #[allow(dead_code)]
-    pub fn debug<T>(&mut self, program: &Program, input: &mut InputBuffer<T>, show_lines: bool, show_stats: bool)
+    pub fn debug<T>(&mut self, program: &Program, input: &mut InputBuffer<T>, output: &mut OutputBuffer, show_lines: bool, show_stats: bool)
     where std::io::Cursor<T>: std::io::Read{
         let now = std::time::Instant::now();
 
@@ -209,7 +212,7 @@ impl Machine{
                 println!("Line {}", self.ip[self.cip]);
             }
 
-            self.execute_instruction(&program, input);
+            self.execute_instruction(&program, input, output);
             self.cycles += 1;
         }
 

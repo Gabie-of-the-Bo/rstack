@@ -68,8 +68,16 @@ impl Machine{
                 self.push(i.args[0]);
             },
 
-            InstId::IN => {
-                self.push(input.read());
+            InstId::IN32 => {
+                self.push(input.read_u32());
+            },
+
+            InstId::IN16 => {
+                self.push(input.read_u16() as u32);
+            },
+
+            InstId::IN8 => {
+                self.push(input.read_u8() as u32);
             },
 
             InstId::STORE => {

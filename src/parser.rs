@@ -6,7 +6,9 @@ pub fn to_instruction(vector: &Vec<&str>) -> Instruction{
     return match vector.as_slice(){
         ["CONST", a] => Instruction::from((InstId::CONST, p(a))),
 
-        ["IN"] => Instruction::from(InstId::IN),
+        ["IN32"] => Instruction::from(InstId::IN32),
+        ["IN16"] => Instruction::from(InstId::IN16),
+        ["IN8"] => Instruction::from(InstId::IN8),
 
         ["STORE"] => Instruction::from(InstId::STORE),
         ["STOREC", a] => Instruction::from((InstId::STOREC, p(a))),

@@ -3,7 +3,9 @@
 pub enum InstId{
     CONST,
 
-    IN,
+    IN32,
+    IN16,
+    IN8,
 
     STORE,
     STOREC,

@@ -37,10 +37,24 @@ impl<T> InputBuffer<T> where
         return InputBuffer::<T>::from_vector_u8(res);
     }
 
-    pub fn read(&mut self) -> u32{
+    pub fn read_u32(&mut self) -> u32{
         let mut buf: [u8; 4] = [0; 4];
         self.data.read_exact(&mut buf).expect("Error while reading input stream of data");
 
         return u32::from_be_bytes(buf);
+    }
+
+    pub fn read_u16(&mut self) -> u16{
+        let mut buf: [u8; 2] = [0; 2];
+        self.data.read_exact(&mut buf).expect("Error while reading input stream of data");
+
+        return u16::from_be_bytes(buf);
+    }
+
+    pub fn read_u8(&mut self) -> u8{
+        let mut buf: [u8; 1] = [0; 1];
+        self.data.read_exact(&mut buf).expect("Error while reading input stream of data");
+
+        return buf[0];
     }
 }

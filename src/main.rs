@@ -10,7 +10,7 @@ use input::*;
 fn main() {
     let mut machine = Machine::new();
 
-    let path: String = String::from("resources/fib2.stack");
+    let path: String = String::from("resources/fib2.rstack");
     let program: Program = parser::parse_file(&path);
 
     let mut i = InputBuffer::<Vec<u8>>::from_vector_u32(vec![41]);

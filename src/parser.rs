@@ -1,3 +1,5 @@
+extern crate regex;
+
 use crate::instruction::*;
 
 pub fn to_instruction(vector: &Vec<&str>) -> Instruction{
@@ -42,11 +44,23 @@ pub fn to_instruction(vector: &Vec<&str>) -> Instruction{
 }
 
 pub fn parse_file(path: &String) -> Program{
+    lazy_static!{
+        static ref COMMENTS_RE: regex::Regex = regex::Regex::new(r"^(.*?)(;.*)?$").unwrap();
+    }
+
     let program_str = std::fs::read_to_string(path).expect("Error while reading file");
     
+    fn trim_comments(l: &'_ str) -> String{
+        return COMMENTS_RE.replace(l, "${1}").into_owned();
+    }
+
+    fn separate_args(l: &String) -> Vec<&str>{
+        return l.trim().split_whitespace().collect();
+    }
+
     return program_str.to_uppercase().lines()
                 .filter(|l| !l.is_empty())
-                .map(|l| l.trim().split_whitespace().collect())
-                .map(|v| to_instruction(&v))
+                .map(trim_comments)
+                .map(|l| to_instruction(&separate_args(&l)))
                 .collect();
 }

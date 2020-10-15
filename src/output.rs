@@ -33,6 +33,10 @@ pub mod buffers{
     use crate::output::OutputBuffer;
     use bounded_vec_deque::BoundedVecDeque;
 
+    pub fn null() -> OutputBuffer<impl FnMut(u32, &BoundedVecDeque<u32>) -> ()>{
+        return OutputBuffer::new(0, |_, _| {});
+    }
+
     pub fn printer() -> OutputBuffer<impl FnMut(u32, &BoundedVecDeque<u32>) -> ()>{
         return OutputBuffer::new(0, |n, _| println!("{:?}", n));
     }

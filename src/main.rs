@@ -17,8 +17,8 @@ fn main() {
     let path: String = String::from("resources/fib3.rstack");
     let program: Program = parser::parse_file(&path);
 
-    let mut i = InputBuffer::<Vec<u8>>::from_vector_u32(vec![41]);
-    let mut o = output::buffers::printer();
+    let mut i = InputBuffer::<Vec<u8>>::from_vector_u32(vec![410000]);
+    let mut o = output::buffers::null();
     
     //machine.run(&program, &i, &o);
     machine.debug(&program, &mut i, &mut o, false, true);

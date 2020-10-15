@@ -42,11 +42,11 @@ pub fn to_instruction(vector: &Vec<&str>) -> Instruction{
 }
 
 pub fn parse_file(path: &String) -> Program{
-    let program_str = std::fs::read_to_string(path).expect("");
+    let program_str = std::fs::read_to_string(path).expect("Error while reading file");
     
-    return program_str.lines()
+    return program_str.to_uppercase().lines()
                 .filter(|l| !l.is_empty())
-                .map(|l| l.split_whitespace().collect())
+                .map(|l| l.trim().split_whitespace().collect())
                 .map(|v| to_instruction(&v))
                 .collect();
 }

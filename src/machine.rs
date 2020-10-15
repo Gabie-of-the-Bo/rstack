@@ -60,8 +60,10 @@ impl Machine{
         return self.memory[address];
     }
 
-    fn execute_instruction<T>(&mut self, program: &Program, input: &mut InputBuffer<T>, output: &mut OutputBuffer)
-    where std::io::Cursor<T>: std::io::Read{
+    fn execute_instruction<T, G>(&mut self, program: &Program, input: &mut InputBuffer<T>, output: &mut OutputBuffer<G>)
+    where std::io::Cursor<T>: std::io::Read,
+          G: FnMut(u32, &bounded_vec_deque::BoundedVecDeque<u32>) -> ()
+    {
         let i = self.fetch(&program);
 
         match i.id{
@@ -195,16 +197,20 @@ impl Machine{
     }
 
     #[allow(dead_code)]
-    pub fn run<T>(&mut self, program: &Program, input: &mut InputBuffer<T>, output: &mut OutputBuffer)
-    where std::io::Cursor<T>: std::io::Read{
+    pub fn run<T, G>(&mut self, program: &Program, input: &mut InputBuffer<T>, output: &mut OutputBuffer<G>)
+    where std::io::Cursor<T>: std::io::Read,
+          G: FnMut(u32, &bounded_vec_deque::BoundedVecDeque<u32>) -> ()
+    {
         while !self.halted && self.ip[self.cip] < program.len(){
             self.execute_instruction(&program, input, output);
         }
     }
 
     #[allow(dead_code)]
-    pub fn debug<T>(&mut self, program: &Program, input: &mut InputBuffer<T>, output: &mut OutputBuffer, show_lines: bool, show_stats: bool)
-    where std::io::Cursor<T>: std::io::Read{
+    pub fn debug<T, G>(&mut self, program: &Program, input: &mut InputBuffer<T>, output: &mut OutputBuffer<G>, show_lines: bool, show_stats: bool)
+    where std::io::Cursor<T>: std::io::Read,
+          G: FnMut(u32, &bounded_vec_deque::BoundedVecDeque<u32>) -> ()
+    {
         let now = std::time::Instant::now();
 
         while !self.halted && self.ip[self.cip] < program.len(){

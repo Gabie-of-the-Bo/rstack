@@ -138,6 +138,30 @@ impl Machine{
                 self.push(a / b);
             },
 
+            InstId::ADDF => unsafe{
+                let a = std::mem::transmute::<u32, f32>(self.pop());
+                let b = std::mem::transmute::<u32, f32>(self.pop());
+                self.push(std::mem::transmute::<f32, u32>(a + b));
+            },
+
+            InstId::SUBF => unsafe{
+                let a = std::mem::transmute::<u32, f32>(self.pop());
+                let b = std::mem::transmute::<u32, f32>(self.pop());
+                self.push(std::mem::transmute::<f32, u32>(a - b));
+            },
+
+            InstId::MULF => unsafe{
+                let a = std::mem::transmute::<u32, f32>(self.pop());
+                let b = std::mem::transmute::<u32, f32>(self.pop());
+                self.push(std::mem::transmute::<f32, u32>(a * b));
+            },
+
+            InstId::DIVF => unsafe{
+                let a = std::mem::transmute::<u32, f32>(self.pop());
+                let b = std::mem::transmute::<u32, f32>(self.pop());
+                self.push(std::mem::transmute::<f32, u32>(a / b));
+            },
+
             InstId::JMP => {
                 let line = i.args[0];
                 self.ip[self.cip] = line as usize;

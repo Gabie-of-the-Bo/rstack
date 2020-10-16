@@ -40,6 +40,10 @@ pub mod buffers{
     pub fn printer() -> OutputBuffer<impl FnMut(u32, &BoundedVecDeque<u32>) -> ()>{
         return OutputBuffer::new(0, |n, _| println!("{:?}", n));
     }
+
+    pub fn float_printer() -> OutputBuffer<impl FnMut(u32, &BoundedVecDeque<u32>) -> ()>{
+        return OutputBuffer::new(0, |n, _| println!("{:?}", unsafe{ std::mem::transmute::<u32, f32>(n) }));
+    }
     
     pub fn storer(container: &mut Vec<u32>) -> OutputBuffer<impl FnMut(u32, &BoundedVecDeque<u32>) -> () + '_>{
         return OutputBuffer::new(0, move |n, _| container.push(n));

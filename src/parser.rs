@@ -24,6 +24,10 @@ pub fn to_instruction(vector: &Vec<&str>) -> Instruction{
         ["SUB"] => Instruction::from(InstId::SUB),
         ["MUL"] => Instruction::from(InstId::MUL),
         ["DIV"] => Instruction::from(InstId::DIV),
+        ["ADDF"] => Instruction::from(InstId::ADDF),
+        ["SUBF"] => Instruction::from(InstId::SUBF),
+        ["MULF"] => Instruction::from(InstId::MULF),
+        ["DIVF"] => Instruction::from(InstId::DIVF),
 
         ["JMP", a] => Instruction::from((InstId::JMP, p(a))),
         ["BRZ"] => Instruction::from(InstId::BRZ),

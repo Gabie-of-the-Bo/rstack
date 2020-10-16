@@ -37,6 +37,18 @@ impl<T> InputBuffer<T> where
         return InputBuffer::<T>::from_vector_u8(res);
     }
 
+    pub fn from_vector_f32(vector: Vec<f32>) -> InputBuffer<Vec<u8>>{
+        let mut res: Vec<u32> = vec!();
+
+        unsafe{
+            for n in vector{
+                res.push(std::mem::transmute::<f32, u32>(n));
+            }
+        }
+
+        return InputBuffer::<T>::from_vector_u32(res);
+    }
+
     pub fn read_u32(&mut self) -> u32{
         let mut buf: [u8; 4] = [0; 4];
         self.data.read_exact(&mut buf).expect("Error while reading input stream of data");

@@ -14,11 +14,11 @@ use input::*;
 fn main() {
     let mut machine = Machine::new();
 
-    let path: String = String::from("resources/fib3.rstack");
+    let path: String = String::from("resources/float_test.rstack");
     let program: Program = parser::parse_file(&path);
 
-    let mut i = InputBuffer::<Vec<u8>>::from_vector_u32(vec![410000]);
-    let mut o = output::buffers::null();
+    let mut i = InputBuffer::<Vec<u8>>::from_vector_f32(vec![1.5]);
+    let mut o = output::buffers::float_printer();
     
     //machine.run(&program, &i, &o);
     machine.debug(&program, &mut i, &mut o, false, true);

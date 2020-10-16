@@ -19,6 +19,10 @@ pub enum InstId{
     SUB,
     MUL,
     DIV,
+    ADDF,
+    SUBF,
+    MULF,
+    DIVF,
 
     JMP,
     BRZ,

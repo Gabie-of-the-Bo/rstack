@@ -4,17 +4,15 @@ HALT
 
 FIB: CONST 1  ; First two values of the sequence
 CONST 1
-CALC: ROTL 1  ; Calculate the next number
+CALC: PEEK 1  ; Calculate the next number
 PEEK 1
-ROTL 1
+MOVE 2
 ADD
 DUP           ; Return the number
 OUT
-CONST 1       ; Decrease the counter
-ROTL 3
-SUB
-ROTR 2
-PEEK 2
+PEEK 2        ; Decrease the counter
+DEC
+COPY 3
 BRZ           ; Break the loop when the counter is 0
 JMP CALC
 RET

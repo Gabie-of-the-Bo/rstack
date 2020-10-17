@@ -5,18 +5,26 @@ use strum::AsStaticRef;
 pub enum InstId{
     CONST,
 
+    // *** IO ***
+
     IN32,
     IN16,
     IN8,
 
     OUT,
 
+    // *** MEMORY ***
+    
     STORE,
     STOREC,
     STOREAT,
     FETCH,
     FETCHFROM,
 
+    // *** ARITHMETIC ***
+
+    INC,
+    DEC,
     ADD,
     SUB,
     MUL,
@@ -26,20 +34,30 @@ pub enum InstId{
     MULF,
     DIVF,
 
+    // *** FLOW ***
+
     JMP,
     BRZ,
     BRNZ,
+    BREQ,
+    BRNEQ,
 
     CALL,
     CALLC,
     RET,
 
+    HALT,
+
+    // *** STACK MANIPULATION ***
+
     PEEK,
     DUP,
     ROTL,
     ROTR,
-
-    HALT
+    COPY,
+    MOVE,
+    POP,
+    DEL
 }
 
 impl InstId{
@@ -52,6 +70,9 @@ impl InstId{
             InstId::CALLC => 1,
             InstId::ROTL => 1,
             InstId::ROTR => 1,
+            InstId::MOVE => 1,
+            InstId::COPY => 1,
+            InstId::DEL => 1,
             _ => 0
         }
     }
@@ -93,6 +114,12 @@ impl From<(InstId, u32, u32)> for Instruction{
 
 impl std::fmt::Display for Instruction{
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{} {:?}", self.id.as_static(), self.args)
+        write!(f, "{}", self.id.as_static()).expect("Invalid instruction name");
+
+        for arg in 0..self.id.arg_number(){
+            write!(f, " {}", self.args[arg]).expect("Invalid instruction argument");
+        }
+
+        return std::result::Result::Ok(());
     }
 }

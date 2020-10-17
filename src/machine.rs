@@ -52,6 +52,10 @@ impl Machine{
         return res;
     }
 
+    fn peek(&mut self) -> u32{
+        return self.stack[self.sp - 1];
+    }
+
     fn store_mem(&mut self, value: u32, address: usize){
         self.memory[address] = value;
     }
@@ -114,52 +118,60 @@ impl Machine{
                 self.push(value);
             },
 
+            InstId::INC => {
+                self.stack[self.sp - 1] = self.stack[self.sp - 1] + 1;
+            },
+
+            InstId::DEC => {
+                self.stack[self.sp - 1] = self.stack[self.sp - 1] - 1;
+            },
+
             InstId::ADD => {
                 let a = self.pop();
-                let b = self.pop();
-                self.push(a + b);
+                let b = self.peek();
+                self.stack[self.sp - 1] = a + b;
             },
 
             InstId::SUB => {
                 let a = self.pop();
-                let b = self.pop();
-                self.push(a - b);
+                let b = self.peek();
+                self.stack[self.sp - 1] = a - b;
             },
 
             InstId::MUL => {
                 let a = self.pop();
-                let b = self.pop();
-                self.push(a * b);
+                let b = self.peek();
+                self.stack[self.sp - 1] = a * b;
             },
 
             InstId::DIV => {
                 let a = self.pop();
-                let b = self.pop();
-                self.push(a / b);
+                let b = self.peek();
+                self.stack[self.sp - 1] = a / b;
             },
 
             InstId::ADDF => unsafe{
                 let a = std::mem::transmute::<u32, f32>(self.pop());
-                let b = std::mem::transmute::<u32, f32>(self.pop());
-                self.push(std::mem::transmute::<f32, u32>(a + b));
+                let b = std::mem::transmute::<u32, f32>(self.peek());
+                self.stack[self.sp - 1] = std::mem::transmute::<f32, u32>(a + b);
             },
 
             InstId::SUBF => unsafe{
                 let a = std::mem::transmute::<u32, f32>(self.pop());
-                let b = std::mem::transmute::<u32, f32>(self.pop());
-                self.push(std::mem::transmute::<f32, u32>(a - b));
+                let b = std::mem::transmute::<u32, f32>(self.peek());
+                self.stack[self.sp - 1] = std::mem::transmute::<f32, u32>(a - b);
             },
 
             InstId::MULF => unsafe{
                 let a = std::mem::transmute::<u32, f32>(self.pop());
-                let b = std::mem::transmute::<u32, f32>(self.pop());
-                self.push(std::mem::transmute::<f32, u32>(a * b));
+                let b = std::mem::transmute::<u32, f32>(self.peek());
+                self.stack[self.sp - 1] = std::mem::transmute::<f32, u32>(a * b);
             },
 
             InstId::DIVF => unsafe{
                 let a = std::mem::transmute::<u32, f32>(self.pop());
-                let b = std::mem::transmute::<u32, f32>(self.pop());
-                self.push(std::mem::transmute::<f32, u32>(a / b));
+                let b = std::mem::transmute::<u32, f32>(self.peek());
+                self.stack[self.sp - 1] = std::mem::transmute::<f32, u32>(a / b);
             },
 
             InstId::JMP => {
@@ -175,6 +187,18 @@ impl Machine{
 
             InstId::BRNZ => {
                 if self.pop() != 0{
+                    self.ip[self.cip] += 1;
+                }
+            }
+
+            InstId::BREQ => {
+                if self.pop() == self.pop(){
+                    self.ip[self.cip] += 1;
+                }
+            }
+
+            InstId::BRNEQ => {
+                if self.pop() != self.pop(){
                     self.ip[self.cip] += 1;
                 }
             }
@@ -207,6 +231,27 @@ impl Machine{
             InstId::ROTR => {
                 let rel = i.args[0] as usize;
                 self.stack[(self.sp - 1 - rel)..self.sp].rotate_right(1);
+            }
+
+            InstId::MOVE => {
+                let rel = i.args[0] as usize;
+                let value = self.pop();
+                self.stack[self.sp - 1 - rel] = value;
+            }
+
+            InstId::COPY => {
+                let rel = i.args[0] as usize;
+                self.stack[self.sp - 1 - rel] = self.peek();
+            }
+
+            InstId::POP => {
+                self.pop();
+            }
+
+            InstId::DEL => {
+                let rel = i.args[0] as usize;
+                self.stack[(self.sp - 1 - rel)..self.sp].rotate_left(1);
+                self.pop();
             }
 
             InstId::PEEK => {

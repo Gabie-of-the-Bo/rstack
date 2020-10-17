@@ -5,10 +5,10 @@ ADDF
 DUP
 OUT
 CONST 1     ; Decrease the counter
-ROTL 2
+PEEK 2
 SUB
-ROTR 1
-PEEK 1
+DUP
+MOVE 2
 BRZ         ; Break the loop when the counter is 0
 JMP F_DUP
 HALT

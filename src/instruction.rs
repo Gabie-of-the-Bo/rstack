@@ -1,5 +1,7 @@
+use strum::AsStaticRef;
+
 #[allow(dead_code)]
-#[derive(Copy, Clone)]
+#[derive(Copy, Clone, AsStaticStr, EnumString)]
 pub enum InstId{
     CONST,
 
@@ -40,6 +42,21 @@ pub enum InstId{
     HALT
 }
 
+impl InstId{
+    fn arg_number(&self) -> usize{
+        match &self{
+            InstId::CONST => 1,
+            InstId::STOREAT => 1,
+            InstId::FETCHFROM => 1,
+            InstId::JMP => 1,
+            InstId::CALLC => 1,
+            InstId::ROTL => 1,
+            InstId::ROTR => 1,
+            _ => 0
+        }
+    }
+}
+
 pub struct Instruction{
     pub id: InstId,
     pub args: [u32; 2]
@@ -76,6 +93,6 @@ impl From<(InstId, u32, u32)> for Instruction{
 
 impl std::fmt::Display for Instruction{
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{} {:?}", self.id as u8, self.args)
+        write!(f, "{} {:?}", self.id.as_static(), self.args)
     }
 }

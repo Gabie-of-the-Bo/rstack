@@ -3,49 +3,19 @@ extern crate regex;
 use crate::instruction::*;
 use std::collections::HashMap;
 
+use std::str::FromStr;
+
 pub fn to_instruction(vector: &Vec<&str>) -> Instruction{
     let p = |i: &str| {i.parse::<u32>().unwrap()};
+    
+    let id = InstId::from_str(vector[0]).expect("Invalid instruction");
+    let mut args = vector[1..].iter().map(|a| p(a)).collect::<Vec<u32>>();
+    
+    while args.len() < 2{
+        args.push(0);
+    }
 
-    return match vector.as_slice(){
-        ["CONST", a] => Instruction::from((InstId::CONST, p(a))),
-
-        ["IN32"] => Instruction::from(InstId::IN32),
-        ["IN16"] => Instruction::from(InstId::IN16),
-        ["IN8"] => Instruction::from(InstId::IN8),
-
-        ["STORE"] => Instruction::from(InstId::STORE),
-        ["STOREC", a] => Instruction::from((InstId::STOREC, p(a))),
-        ["STOREAT", a] => Instruction::from((InstId::STOREAT, p(a))),
-
-        ["FETCH"] => Instruction::from(InstId::FETCH),
-        ["FETCHFROM", a] => Instruction::from((InstId::FETCHFROM, p(a))),
-
-        ["ADD"] => Instruction::from(InstId::ADD),
-        ["SUB"] => Instruction::from(InstId::SUB),
-        ["MUL"] => Instruction::from(InstId::MUL),
-        ["DIV"] => Instruction::from(InstId::DIV),
-        ["ADDF"] => Instruction::from(InstId::ADDF),
-        ["SUBF"] => Instruction::from(InstId::SUBF),
-        ["MULF"] => Instruction::from(InstId::MULF),
-        ["DIVF"] => Instruction::from(InstId::DIVF),
-
-        ["JMP", a] => Instruction::from((InstId::JMP, p(a))),
-        ["BRZ"] => Instruction::from(InstId::BRZ),
-        ["BRNZ"] => Instruction::from(InstId::BRNZ),
-
-        ["CALL"] => Instruction::from(InstId::CALL),
-        ["CALLC", a] => Instruction::from((InstId::CALLC, p(a))),
-        ["RET"] => Instruction::from(InstId::RET),
-
-        ["DUP"] => Instruction::from(InstId::DUP),
-        ["PEEK", a] => Instruction::from((InstId::PEEK, p(a))),
-        ["ROTL", a] => Instruction::from((InstId::ROTL, p(a))),
-        ["ROTR", a] => Instruction::from((InstId::ROTR, p(a))),
-
-        ["OUT"] => Instruction::from(InstId::OUT),
-
-        _ => Instruction::from(InstId::HALT)
-    };
+    return Instruction::from((id, args[0], args[1]));
 }
 
 pub fn parse_file(path: &String) -> Program{

@@ -1,7 +1,10 @@
 use strum::AsStaticRef;
+use byteorder::{BigEndian, WriteBytesExt};
+use num_enum::TryFromPrimitive;
 
 #[allow(dead_code)]
-#[derive(Copy, Clone, AsStaticStr, EnumString)]
+#[repr(u8)]
+#[derive(Copy, Clone, AsStaticStr, EnumString, TryFromPrimitive)]
 pub enum InstId{
     CONST,
 
@@ -61,13 +64,14 @@ pub enum InstId{
 }
 
 impl InstId{
-    fn arg_number(&self) -> usize{
+    pub fn arg_number(&self) -> usize{
         match &self{
             InstId::CONST => 1,
             InstId::STOREAT => 1,
             InstId::FETCHFROM => 1,
             InstId::JMP => 1,
             InstId::CALLC => 1,
+            InstId::PEEK => 1,
             InstId::ROTL => 1,
             InstId::ROTR => 1,
             InstId::MOVE => 1,
@@ -109,6 +113,18 @@ impl From<(InstId, u32, u32)> for Instruction{
             id: id.0,
             args: [id.1, id.2]
         }
+    }
+}
+
+impl Into<Vec<u8>> for &Instruction{
+    fn into(self) -> Vec<u8>{
+        let mut res: Vec<u8> = vec!(self.id as u8);
+
+        for arg in 0..self.id.arg_number(){
+            res.write_u32::<BigEndian>(self.args[arg] as u32).unwrap();
+        }
+        
+        return res;
     }
 }
 

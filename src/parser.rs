@@ -5,6 +5,13 @@ use std::collections::HashMap;
 
 use std::str::FromStr;
 
+#[allow(dead_code)]
+pub fn print_program(program: &Program){
+    for (line, code) in program.iter().enumerate(){
+        println!("{}: {}", line, code);
+    }
+}
+
 pub fn to_instruction(vector: &Vec<&str>) -> Instruction{
     let p = |i: &str| {i.parse::<u32>().unwrap()};
     

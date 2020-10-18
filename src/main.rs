@@ -9,6 +9,7 @@ mod machine;
 mod parser;
 mod input;
 mod output;
+mod binary;
 
 use machine::*;
 use instruction::*;
@@ -20,8 +21,11 @@ fn main() {
     let path: String = String::from("resources/fib3.rstack");
     let program: Program = parser::parse_file(&path);
 
-    let mut i = InputBuffer::<Vec<u8>>::from_vector_u32(vec![200000000]);
-    let mut o = output::buffers::null();
+    //save_program(&program, "resources/bin.crstack".to_string());
+    //program = load_program("resources/bin.crstack".to_string());
+
+    let mut i = InputBuffer::<Vec<u8>>::from_vector_u32(vec![10]);
+    let mut o = output::buffers::printer();
     
     //machine.run(&program, &i, &o);
     machine.debug(&program, &mut i, &mut o, false, true);

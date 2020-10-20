@@ -28,7 +28,10 @@ pub fn to_instruction(vector: &Vec<&str>) -> Instruction{
 pub fn parse_file(path: &String) -> Program{
     lazy_static!{
         static ref COMMENTS_RE: regex::Regex = regex::Regex::new(r"^(.*?)(;.*)?$").unwrap();
-        static ref LABELS_RE: regex::Regex = regex::Regex::new(r"^(.+):(.+)").unwrap();
+        static ref LABELS_RE: regex::Regex = regex::Regex::new(r"^(.+):(.+)$").unwrap();
+        static ref BIN_RE: regex::Regex = regex::Regex::new(r"0b([01]+)").unwrap();
+        static ref HEX_RE: regex::Regex = regex::Regex::new(r"0x([0-9a-fA-F]+)").unwrap();
+        static ref FLOAT_RE: regex::Regex = regex::Regex::new(r"([0-9a-fA-F]+)F").unwrap();
     }
 
     fn get_label(l: (usize, &str)) -> (String, usize){
@@ -56,6 +59,20 @@ pub fn parse_file(path: &String) -> Program{
 
         for (i, j) in labels.iter(){
             res = res.replace(i, j.to_string().as_ref())
+        }
+
+        for i in BIN_RE.captures_iter(res.clone().as_ref()){
+            let number_str = i.get(1).unwrap().as_str();
+            let number = u32::from_str_radix(number_str, 2).unwrap().to_string();
+
+            res = res.replacen(i.get(0).unwrap().as_str(), number.as_ref(), 1);
+        }
+
+        for i in HEX_RE.captures_iter(res.clone().as_ref()){
+            let number_str = i.get(1).unwrap().as_str();
+            let number = u32::from_str_radix(number_str, 16).unwrap().to_string();
+
+            res = res.replacen(i.get(0).unwrap().as_str(), number.as_ref(), 1);
         }
 
         return res;

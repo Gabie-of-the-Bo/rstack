@@ -1,30 +1,15 @@
-#[macro_use] 
-extern crate lazy_static;
-
-#[macro_use]
-extern crate strum_macros;
-
-mod instruction;
-mod machine;
-mod parser;
-mod input;
-mod output;
-mod binary;
-
-use machine::*;
-use instruction::*;
-use input::*;
+use rstack::*;
 
 fn main() {
-    let mut machine = Machine::new();
+    let mut machine = machine::Machine::new();
 
     let path: String = String::from("resources/fib3.rstack");
-    let program: Program = parser::parse_file(&path);
+    let program: instruction::Program = parser::parse_file(&path);
 
     //save_program(&program, "resources/bin.crstack".to_string());
     //program = load_program("resources/bin.crstack".to_string());
 
-    let mut i = InputBuffer::<Vec<u8>>::from_vector_u32(vec![10]);
+    let mut i = input::InputBuffer::<Vec<u8>>::from_vector_u32(vec![10]);
     let mut o = output::buffers::printer();
     
     //machine.run(&program, &i, &o);

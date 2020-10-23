@@ -9,8 +9,7 @@ pub fn save_program(program: &Program, path: String){
 }
 
 #[allow(dead_code)]
-pub fn load_program(path: String) -> Program{
-    let bytes: Vec<u8> = std::fs::read(path).expect("Error while reading file");
+pub fn load_program_from_bytes(bytes: &Vec<u8>) -> Program{
     let mut res: Program = vec!();
 
     let mut i = 0;
@@ -34,5 +33,12 @@ pub fn load_program(path: String) -> Program{
         res.push(Instruction::from((id, args[0], args[1])));
     }
 
-    return res;
+    return res;    
+}
+
+#[allow(dead_code)]
+pub fn load_program(path: String) -> Program{
+    let bytes: Vec<u8> = std::fs::read(path).expect("Error while reading file");
+    
+    return load_program_from_bytes(&bytes);
 }

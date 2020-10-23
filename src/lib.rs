@@ -19,6 +19,12 @@ use parser::*;
 use input::*;
 
 #[wasm_bindgen]
+pub fn get_rstack_bin(code: &str) -> Vec<u8>{
+    let program = parse_str(&code.to_owned());
+    return serialize_program(&program);
+}
+
+#[wasm_bindgen]
 pub fn execute_rstack_bytes(code: Vec<u8>) -> Vec<u32>{
     let mut machine = Machine::new();
 

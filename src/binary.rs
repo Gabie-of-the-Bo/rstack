@@ -3,8 +3,13 @@ use std::convert::TryInto;
 use crate::instruction::*;
 
 #[allow(dead_code)]
+pub fn serialize_program(program: &Program) -> Vec<u8>{
+    return program.iter().map(|i| i.into()).flat_map(|i: Vec<u8>| i).collect()
+}
+
+#[allow(dead_code)]
 pub fn save_program(program: &Program, path: String){
-    let bytes: Vec<u8> = program.iter().map(|i| i.into()).flat_map(|i: Vec<u8>| i).collect();
+    let bytes: Vec<u8> = serialize_program(&program);
     std::fs::write(path, bytes).expect("Error while writing file");
 }
 

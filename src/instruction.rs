@@ -24,6 +24,13 @@ pub enum InstId{
     FETCH,
     FETCHFROM,
 
+    // *** CASTS ***
+
+    FLOAT,
+    CEIL,
+    FLOOR,
+    ROUND,
+
     // *** ARITHMETIC ***
 
     INC,
@@ -36,6 +43,12 @@ pub enum InstId{
     SUBF,
     MULF,
     DIVF,
+
+    // *** COMPLEX OPERATIONS ***
+
+    EXP,
+    COS,
+    SIN,
 
     // *** FLOW ***
 

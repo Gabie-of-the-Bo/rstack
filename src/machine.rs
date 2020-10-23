@@ -118,6 +118,22 @@ impl Machine{
                 self.push(value);
             },
 
+            InstId::FLOAT => unsafe{
+                self.stack[self.sp - 1] = std::mem::transmute::<f32, u32>(self.peek() as f32);
+            },
+
+            InstId::FLOOR => unsafe{
+                self.stack[self.sp - 1] = std::mem::transmute::<u32, f32>(self.peek()).floor() as u32;
+            },
+
+            InstId::CEIL => unsafe{
+                self.stack[self.sp - 1] = std::mem::transmute::<u32, f32>(self.peek()).ceil() as u32;
+            },
+
+            InstId::ROUND => unsafe{
+                self.stack[self.sp - 1] = std::mem::transmute::<u32, f32>(self.peek()).round() as u32;
+            },
+
             InstId::INC => {
                 self.stack[self.sp - 1] = self.stack[self.sp - 1] + 1;
             },
@@ -172,6 +188,18 @@ impl Machine{
                 let a = std::mem::transmute::<u32, f32>(self.pop());
                 let b = std::mem::transmute::<u32, f32>(self.peek());
                 self.stack[self.sp - 1] = std::mem::transmute::<f32, u32>(a / b);
+            },
+
+            InstId::EXP => unsafe{
+                self.stack[self.sp - 1] = std::mem::transmute::<f32, u32>(std::mem::transmute::<u32, f32>(self.peek()).exp());
+            },
+
+            InstId::COS => unsafe{
+                self.stack[self.sp - 1] = std::mem::transmute::<f32, u32>(std::mem::transmute::<u32, f32>(self.peek()).cos());
+            },
+
+            InstId::SIN => unsafe{
+                self.stack[self.sp - 1] = std::mem::transmute::<f32, u32>(std::mem::transmute::<u32, f32>(self.peek()).sin());
             },
 
             InstId::JMP => {

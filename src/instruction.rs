@@ -100,6 +100,41 @@ pub struct Instruction{
     pub args: [u32; 2]
 }
 
+#[allow(dead_code)]
+impl Instruction{
+    pub fn to_bytes_u32(&self) -> Vec<u8>{
+        let mut res: Vec<u8> = vec!(self.id as u8);
+
+        for arg in 0..self.id.arg_number(){
+            res.write_u32::<BigEndian>(self.args[arg] as u32).unwrap();
+        }
+        
+        return res;
+    }
+
+    
+    pub fn to_bytes_u16(&self) -> Vec<u8>{
+        let mut res: Vec<u8> = vec!(self.id as u8);
+
+        for arg in 0..self.id.arg_number(){
+            res.write_u16::<BigEndian>(self.args[arg] as u16).unwrap();
+        }
+        
+        return res;
+    }
+
+    
+    pub fn to_bytes_u8(&self) -> Vec<u8>{
+        let mut res: Vec<u8> = vec!(self.id as u8);
+
+        for arg in 0..self.id.arg_number(){
+            res.push(self.args[arg] as u8);
+        }
+        
+        return res;
+    }
+}
+
 pub type Program = Vec<Instruction>;
 
 impl From<InstId> for Instruction{
@@ -126,18 +161,6 @@ impl From<(InstId, u32, u32)> for Instruction{
             id: id.0,
             args: [id.1, id.2]
         }
-    }
-}
-
-impl Into<Vec<u8>> for &Instruction{
-    fn into(self) -> Vec<u8>{
-        let mut res: Vec<u8> = vec!(self.id as u8);
-
-        for arg in 0..self.id.arg_number(){
-            res.write_u32::<BigEndian>(self.args[arg] as u32).unwrap();
-        }
-        
-        return res;
     }
 }
 

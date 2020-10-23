@@ -4,10 +4,10 @@ fn main() {
     let mut machine = machine::Machine::new();
 
     let path: String = String::from("resources/fib3.rstack");
-    let program: instruction::Program = parser::parse_file(&path);
+    let mut program: instruction::Program = parser::parse_file(&path);
 
-    //save_program(&program, "resources/bin.crstack".to_string());
-    //program = load_program("resources/bin.crstack".to_string());
+    binary::save_program(&program, "resources/bin.crstack".to_string());
+    program = binary::load_program("resources/bin.crstack".to_string());
 
     let mut i = input::InputBuffer::<Vec<u8>>::from_vector_u32(vec![10]);
     let mut o = output::buffers::printer();
